@@ -1,24 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
 
 function App() {
+  const [rickMorty, setRickMorty] = useState(null);
+
+  const onClick = async() => {
+    try {
+      const response = await fetch('http://localhost:8888/.netlify/functions/rick-morty');
+      const json = await response.json();
+      setRickMorty(json);
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={onClick}>Fetch API</button>
+
+      {
+        rickMorty && (
+          <div>
+            <span>{rickMorty.name}</span>
+            <span>{rickMorty.status}</span>
+            <img src={rickMorty.image} alt=""></img>
+        </div>
+        )
+      }
+
     </div>
   );
 }
